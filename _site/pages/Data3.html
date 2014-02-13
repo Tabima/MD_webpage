@@ -1,0 +1,53 @@
+<h1 id="__data_analysis_3">’ # Data Analysis 3.</h1>
+
+<h1 id="__javier_f_tabima">’ ## Javier F. Tabima</h1>
+
+<h1 id="__ta_ben">’ ### TA: Ben.</h1>
+
+<h1 id="__lab_hours_m_121">’ ### Lab hours: M 12-1</h1>
+
+<h1 id="_echofalse_warningsfalse_figaligncenter_messagesfalse">+ echo=FALSE, warnings=FALSE, fig.align=”center”, messages=FALSE</h1>
+
+<p>options(warn=-1)</p>
+
+<h1 id="_echofalse_warningsfalse_figaligncenter_messagesfalse_2">+ echo=FALSE, warnings=FALSE, fig.align=”center”, messages=FALSE</h1>
+
+<p>library(openintro) library(ggplot2) library(grid) source(url(“http://stat511.cwick.co.nz/code/stat_qqline.r”)) source(“~/Documents/Scripts/multiplot.R”)</p>
+
+<h1 id="__introduction">’ # Introduction</h1>
+
+<h1 id="">’</h1>
+
+<h1 id="_we_want_to_determine_if_there_is_a_relationship_between_the_weight_and_the_height_of_individuals_we_used_a_dataset_that_contains_body_girth_measurements_and_skeletal_diameter_measurements_as_well_as_age_weight_height_and_gender_for_507_individuals__247_men_and_260_women_we_are_interested_in_determining_if_the_weight_of_the_individuals_can_be_explained_or_predicted_by_height_and_to_see_if_this_prediction_is_positively_related_weight_increases_with_height_or_negatively_related_weight_decreases_with_height">’ We want to determine if there is a relationship between the weight and the height of individuals. We used a dataset that contains body girth measurements and skeletal diameter measurements, as well as age, weight, height and gender, for 507 individuals - 247 men and 260 women. We are interested in determining if the weight of the individuals can be explained or predicted by height, and to see if this prediction is positively related (weight increases with height) or negatively related (weight decreases with height).</h1>
+
+<h1 id="_2">’</h1>
+
+<h1 id="__methods">’ # Methods</h1>
+
+<h1 id="_we_decided_to_measure_the_relationship_between_both_variables_using_linear_regressions_using_the_aforementioned_dataset_we_compared_the_height_and_the_weight_the_507_individuals_first_of_all_we_decided_to_check_for_any_violation_of_the_assumptions_for_the_lineal_regression_method_figure_1_we_checked_for_normality_using_normality_plots_figure_1a_linearity_and_constant_variance_using_residualsfitted_value_plots_figure_1b_and_residualsexplanatory_variable_plots_figure_1c_all_the_plots_show_that_there_are_no_violations_of_the_assumptions_so_we_decided_to_use_the_lineal_regression_approach">’ We decided to measure the relationship between both variables using linear regressions. Using the aforementioned dataset, we compared the height and the weight the 507 individuals. First of all, we decided to check for any violation of the assumptions for the lineal regression method (Figure 1). We checked for normality using normality plots (Figure 1a), linearity and constant variance using residuals-fitted value plots (Figure 1b) and residuals-explanatory variable plots (Figure 1c). All the plots show that there are no violations of the assumptions, so we decided to use the lineal regression approach.</h1>
+
+<h1 id="_residuals_against_explanatory_variable">’ Residuals against explanatory variable</h1>
+
+<h1 id="_echofalse_warningsfalse_figaligncenter_messagesfalse_3">+ echo=FALSE, warnings=FALSE, fig.align=”center”, messages=FALSE</h1>
+
+<p>fit &lt;- lm(wgt ~ hgt, data = bdims) p1 &lt;- qplot(sample = .resid, data = fit, main=”Figure 1a. Normal probability plot” ) + stat_qqline() p2 &lt;- qplot(.fitted, .resid, data = fit, main=”Figure 1b. residuals against fitted values plot”) + geom_hline(yintercept = 0) + geom_smooth() p3 &lt;- qplot(hgt, .resid, data = fit, main=”Figure 1c. Residuals against explanatory plot”, xlab=”Height (cm)”) + geom_hline(yintercept = 0) + geom_smooth()</p>
+
+<h1 id="_echofalse_warningsfalse_figaligncenter_messagesfalse_4">+ echo=FALSE, warnings=FALSE, fig.align=”center”, messages=FALSE</h1>
+
+<p>multiplot(p1,p3,p2, cols=2)</p>
+
+<h1 id="__summary">’ # Summary</h1>
+
+<h1 id="_after_performing_the_analysis_we_estimate_the_mean_weight_of_a_person_of_0_cm_to_be_105_kg_under_this_lineal_regression_model_weightheight0__1height_figure_2_we_also_estimate_that_an_increase_in_height_of_1_cm_is_associated_with_an_increase_in_mean_weight_by_101762_kg_also_with_95_confidence_the_mean_weight_of_person_of_0_cm_of_height_is_between_119824_and_9020_kg_and_with_95_confidence_an_increase_in_weight_of_1_cm_is_associated_with_an_increase_in_mean_weight_between_0931_and_1104_kg">’ After performing the analysis, we estimate the mean weight of a person of 0 cm to be -105 kg under this lineal regression model: <strong>μ{Weight|Height}=β0 + β1Height</strong> (Figure 2). We also estimate that an increase in height of 1 cm is associated with an increase in mean weight by 1.01762 kg. Also, with 95% confidence, the mean weight of person of 0 cm of height is between -119.824 and -90.20 kg, and with 95% confidence, an increase in weight of 1 cm is associated with an increase in mean weight between 0.931 and 1.104 kg.</h1>
+
+<h1 id="_3">’</h1>
+
+<h1 id="_echofalse_warningsfalse_figaligncenter_messagesfalse_5">+ echo=FALSE, warnings=FALSE, fig.align=”center”, messages=FALSE</h1>
+
+<p>qplot(hgt, wgt, data = bdims, main=”Figure 2. Lineal regression”, xlab=”Height (cm)”, ylab=”Weight (kg)”) + geom_smooth(method = “lm”)</p>
+
+<h1 id="_we_wanted_to_estimate_the_mean_weight_of_a_person_that_is_183_cm_tall_we_performed_the_prediction_and_we_estimated_that_the_mean_weight_of_a_person_that_is_183_cm_tall_is_8122_kg_and_with_95_confidence_the_mean_mean_weight_of_a_person_that_is_183_cm_tall_is_between_6288_and_9955_kg_still_this_prediction_is_not_very_accurate_because_we_are_using_the_predicted_interval_valuesred_linefigure_3_which_are_much_more_spread_that_the_mean_confidence_intervals_for_that_particular_point_confidence_intervals_for_the_mean_at_183_cm_are_between_7990_cm_and_8252_cm_grey_bar_in_figure_3">’ We wanted to estimate the mean weight of a person that is 183 cm tall. We performed the prediction and we estimated that the mean weight of a person that is 183 cm tall is 81.22 kg, and with 95% confidence, the mean mean weight of a person that is 183 cm tall is between 62.88 and 99.55 kg. Still, this prediction is not very accurate because we are using the predicted interval values(red line,Figure 3), which are much more spread that the mean confidence intervals for that particular point (Confidence intervals for the mean at 183 cm are between 79.90 cm and 82.52 cm, grey bar in Figure 3).</h1>
+
+<h1 id="_echofalse_warningsfalse_figaligncenter_messagesfalse_6">+ echo=FALSE, warnings=FALSE, fig.align=”center”, messages=FALSE</h1>
+
+<p>newdf &lt;- data.frame(hgt = c(183)) PI &lt;- cbind(newdf, predict(fit, newdf, interval = “prediction”)) qplot(hgt, wgt, data = bdims, main=”Figure 3. Lineal regression plot with emphasis on the predicted values”,) + geom_pointrange(aes(y = fit, ymin = lwr, ymax = upr), colour = I(“red”), data = PI) + geom_smooth(method = “lm”)</p>
