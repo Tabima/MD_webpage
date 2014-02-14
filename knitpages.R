@@ -17,8 +17,8 @@ KnitPost <- function(input, outfile, base.url="/") {
     knit(input, outfile, envir = parent.frame())
 }
 
-for (infile in list.files("_R", pattern="*.Rmd", full.names=TRUE)) {
-    outfile = paste0("pages/", sub(".Rmd$", ".md", basename(infile)))
+for (infile in list.files("_R", pattern="*.Rmd|*.rmd", full.names=TRUE)) {
+    outfile = paste0("", sub(".Rmd$", ".md", basename(infile)))
 
     # knit only if the input file is the last one modified
     if (!file.exists(outfile) |
