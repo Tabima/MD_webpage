@@ -1,6 +1,5 @@
 ---
 Title: Data1.html
-layout: default
 ---
 Chapter 1. Population genetics in R
 ====

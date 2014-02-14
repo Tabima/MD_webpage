@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<!-- saved from url=(0014)about:internet -->
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<meta http-equiv="x-ua-compatible" content="IE=9" >
+
+<title>Chapter 1. Population genetics in R</title>
+
+<style type="text/css">
+body, td {
+   font-family: sans-serif;
+   background-color: white;
+   font-size: 12px;
+   margin: 8px;
+}
+
+tt, code, pre {
+   font-family: 'DejaVu Sans Mono', 'Droid Sans Mono', 'Lucida Console', Consolas, Monaco, monospace;
+}
+
+h1 { 
+   font-size:2.2em; 
+}
+
+h2 { 
+   font-size:1.8em; 
+}
+
+h3 { 
+   font-size:1.4em; 
+}
+
+h4 { 
+   font-size:1.0em; 
+}
+
+h5 { 
+   font-size:0.9em; 
+}
+
+h6 { 
+   font-size:0.8em; 
+}
+
+a:visited {
+   color: rgb(50%, 0%, 50%);
+}
+
+pre {	
+   margin-top: 0;
+   max-width: 95%;
+   border: 1px solid #ccc;
+   white-space: pre-wrap;
+}
+
+pre code {
+   display: block; padding: 0.5em;
+}
+
+code.r, code.cpp {
+   background-color: #F8F8F8;
+}
+
+table, td, th {
+  border: none;
+}
+
+blockquote {
+   color:#666666;
+   margin:0;
+   padding-left: 1em;
+   border-left: 0.5em #EEE solid;
+}
+
+hr {
+   height: 0px;
+   border-bottom: none;
+   border-top-width: thin;
+   border-top-style: dotted;
+   border-top-color: #999999;
+}
+
+@media print {
+   * { 
+      background: transparent !important; 
+      color: black !important; 
+      filter:none !important; 
+      -ms-filter: none !important; 
+   }
+
+   body { 
+      font-size:12pt; 
+      max-width:100%; 
+   }
+       
+   a, a:visited { 
+      text-decoration: underline; 
+   }
+
+   hr { 
+      visibility: hidden;
+      page-break-before: always;
+   }
+
+   pre, blockquote { 
+      padding-right: 1em; 
+      page-break-inside: avoid; 
+   }
+
+   tr, img { 
+      page-break-inside: avoid; 
+   }
+
+   img { 
+      max-width: 100% !important; 
+   }
+
+   @page :left { 
+      margin: 15mm 20mm 15mm 10mm; 
+   }
+     
+   @page :right { 
+      margin: 15mm 10mm 15mm 20mm; 
+   }
+
+   p, h2, h3 { 
+      orphans: 3; widows: 3; 
+   }
+
+   h2, h3 { 
+      page-break-after: avoid; 
+   }
+}
+
+</style>
+
+
+
+<!-- MathJax scripts -->
+<script type="text/javascript" src="https://c328740.ssl.cf1.rackcdn.com/mathjax/2.0-latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+
+</head>
+
+<body>
+<h1>Chapter 1. Population genetics in R</h1>
+
+<h2>Introduction</h2>
+
+<p>This primer provides a concise introduction to conducting applied analyses of population genetic data in R, with a special emphasis on non-model populations including clonal or partially clonal organisms. It is not meant to be a textbook on population genetics. Quite to the contrary, we refer the reader to several textbooks on population genetics (<a href="http://books.google.com/books?id=Iy08kgEACAAJ">Nielsen &amp; Slatkin, 2013</a>; <a href="http://books.google.com/books?id=tJVreQjInt0C">Templeton, 2006</a>; <a href="http://books.google.com/books?id=SB1vQgAACAAJ">Hartl &amp; Clark, 2007</a>). Likewise, this book will not replace books on theory and statistics of population genetics (<a href="http://books.google.com/books?id=e9QPAQAAMAAJ">Weir, 1996</a>). The reader is thus expected to have a basic understanding of population genetic theory and applications. Finally, this primer is focused on traditional population genetics based on allele frequencies, rather than more sophisticated coalescent approaches (<a href="http://books.google.com/books?id=x30RAgAACAAJ">Wakeley, 2009</a>; <a href="http://books.google.com/books?id=Iy08kgEACAAJ">Nielsen &amp; Slatkin, 2013</a>; <a href="http://books.google.com/books?id=QBC\_SFOamksC">Hein et al. 2004</a>), although some of these aspects will be covered here too. In a nutshell, this primer provides a valuable resource for tackling the nitty-gritty analysis of populations that do not necessarily conform to textbook genetics and might or might not be in Hardy-Weinberg equilibrium and panmixia. </p>
+
+<p>This primer is geared towards biologists intersted in analyzing their populations. This primer does not reuqire extensive knowledge of programming in R, but the user is expected to install R and all its dependent packages. </p>
+
+<h2>Why R?</h2>
+
+<p>Until recently, one of the more tedious aspects of conducting a population genetic analysis was the need for repeated reformatting data to conduct different, complimentary analyses in different programs. Often, these programs only ran on one platform. Now, R provides a toolbox with its packages that allows analysis of most data conveniently without tedious reformatting on all major computing platforms including Microsoft Windows, Linux, and Apple&#39;s OS X. R is an open source statistical programming and graphing language that includes tools for statistical, population genetic, genomic, phylogenetic, and comparative genomic analyses. This primer is for those of us that want to conduct applied analyses of populations and make full use of the palette of tools available in R.</p>
+
+<p>Note that the R user community is a very active and that both R and its packages are regularly updated, critically modified, and noted as deprecated (no longer updated). </p>
+
+<blockquote>
+<p>Any R user needs to make sure all components are up-to-date and that versions are compatible. </p>
+</blockquote>
+
+<h2>Population genetics</h2>
+
+<p>Traditional population genetics is based on analysis of observed allele frequencies compared to frequencies expected, assuming a population genetic model. For example, under a Wright-Fisher model you might expect to see populations of diploid individuals that reproduce sexually, with non-overlapping generations. This model ignores effects such as mutation, recombination, selection or changes in population size or structure. More complex models can incorporate different aspects of effects observed in real populations. However, most of these models assume that populations reproduce sexually. </p>
+
+<h2>Some basic terminology before we get started</h2>
+
+<p>Although we briefly review some terminology, we expect that the reader has a basic understanding of theory and applications of population genetics. Now, let&#39;s review some useful terms.</p>
+
+<p>A <strong>locus</strong> is a position in the genome where we can observe one or several alleles in different individuals. Although in phylogenetic analyses, loci are typically coding genes, in population genetics, a locus is not necessarily a coding gene. Loci used in population genetics are assumed to be selectively neutral and can be an anonymous or non-coding region such as a microsatellite locus (SSR), a single nucleotide polymorphism (SNP) or the presence/absence of a band on a gel. A <strong>genotype</strong> is the combination of alleles carried by a  given individual at a particular set of loci. Individuals carring the same set of alleles are considered to have the same <strong>multilocus genotype</strong> \( MLG \). </p>
+
+<p>Basic metrics of interest in populations are polymorphisms, allele frequencies and genotype frequencies. Polymorphism can be estimated in several ways, such as the total number of loci observed that have more than one allele. The frequency of an allele is calculated as the number of allele copies observed in a population divided by the total number of individuals, times the ploidy (\( N \) in haploids or \( 2N \) in diploids) in the population. For diploids we would observe frequency \( f_{A} \) and \( f_{a} \) for alleles \( A \) and \( a \), respectively:</p>
+
+<p>\( f_{A} = \frac{N_{A}}{2N} \) and \( f_{a} = \frac{N_{a}}{2N} \)</p>
+
+<p>where \( N_{A} \) are the numbers of allele \( A \) segregating in the population genotyped. </p>
+
+<p>By definition, at a biallelic locus frequencies sum to 1: </p>
+
+<p>\( f_{A} + f_{a} = 1 \).</p>
+
+<p>Genotype frequencies are the relative frequencies of each \( MLG \) observed in a population. Thus, for diploids at a <strong>biallelic locus</strong> we can observe three genotypes: \( AA \), \( Aa \), and \( aa \) and their respective frequencies:</p>
+
+<p>\( f_{AA} = \frac{N_{AA}}{2N} \) and \( f_{Aa} = \frac{N_{Aa}}{2N} \) and \( f_{aa} = \frac{N_{aa}}{2N} \) </p>
+
+<p>These frequencies again add up to 1. In diploid organisms we can also calculate the frequency of <strong>homozygotes</strong> (\( AA \) or \( aa \)) or <strong>heterozygotes</strong> (\( Aa \)) as the proportion of individuals falling into each class.</p>
+
+<p>Genetic differentiation of two populations occurs if we observe differences in polymorphism, allele frequencies, genotype frequencies, and heterozygosity. This is often measured by metrics such as \( F_{st} \) or genetic distance.</p>
+
+<blockquote>
+<p>ADD MORE &lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;</p>
+</blockquote>
+
+<h2>The special case of clonal organisms</h2>
+
+<p>Plants and microorganisms such as fungi, oomycetes, and bacteria often reproduce clonally or follow a mixed reproductive system, including various degrees of clonality and sexuality (<a href="">Halkett et al. 2005</a>). Traditional population genetic theory does not apply and these populations violate basic assumptions in the corresponding analyses. Thus, a different set of tools are required for analyses of clonal populations (<a href="">Anderson &amp; Kohn, 1995</a>; <a href="">Balloux et al. 2003</a>; <a href="">Mee{^u}s et al. 2006</a>; <a href="">Gr{\&ldquo;u}nwald &amp; Goss, 2011</a>; <a href="">Halkett et al. 2005</a>; <a href="">Milgroom, 1996</a>). Typically these focus on metrics that are model free and do not assume random mating or random sampling of alleles. Model free metrics suitable for analyzing these populations include measures of genotypic diversity and evenness, and using genetic distance to cluster populations. Additional useful measures include indices of linkage disequiblibrium among markers that are used to infer if populations are reproducing sexually or clonally. We will explore these analyses bit by bit throughout this primer. The <em>poppr</em> R package was specifically developped to facilitate analyses of clonal populations.</p>
+
+<h2>Marker systems, ploidy and other kinds of data</h2>
+
+<p>Population genetic data come in many shapes and forms and a good analysis needs to be tailored to the marker system, ploidy used and corresponding genetic models assumed (<a href="">Gr{\&quot;u}nwald &amp; Goss, 2011</a>). Organisms can be haploid, diploid with or without known phase, or polyploid and in the case of diploid species, marker systems can be dominant (AFLP, RFLP or RAPD data) or codominant (SSR, SNPs, allozymes) (<a href="">Gr{\&quot;u}nwald et al. 2003</a>). A locus can have two alleles (0/1 for AFLP; C/T for SNPs) or many alleles per locus (A/B/C&hellip;N for SSRs or allozymes). In each case the data has to be coded and analyzed differently. Mutation rates can also differ for different markers systems (SSR: high; mitochondrial SNPs: moderate; nuclear SNPs: moderate) (<a href="">Gr{\&quot;u}nwald &amp; Goss, 2011</a>). </p>
+
+<h2>Hierarchical analysis</h2>
+
+<p>To determine if populations show evidence of genetic structure they need to be sampled hierarchically to assess if allele frequencies in subpopulations differ from frequencies in the overall population and amongst each other. </p>
+
+<h2>Applications of population genetic analyses</h2>
+
+<p>Population genetic analyses are tremendously valuable for answering questions ranging from determining best management practices to basic evolutionary questions. For example, a typical concern when finding a new, invasive organism is whether it is introduced to the area or emerged from a resident population. Other questions of interest might include: Where is the center of origin? Does this organism reproduce sexually? Is there evidence of recombination? Has the population gone through a genetic bottleneck? Are populations structured by region, geography, micro-environment? What is the source population of a newly introduced population? What are source and sink populations and what are the rates of migration? This primer will provide some of the basic tools needed to answer many of these questions for populations that are clonal or partially clonal. We hope you enjoy following along. </p>
+
+<h2>References</h2>
+
+<ul>
+<li>James Anderson, Linda Kohn,   (1995) Clonality in soilborne, plant-pathogenic fungi.  <em>Annual Review of Phytopathology</em>  <strong>33</strong>  (1)   369-391</li>
+<li>Fran{\c{c}}ois Balloux, Laurent Lehmann, Thierry Mee{^u}s,   (2003) The population genetics of clonal and partially clonal diploids.  <em>Genetics</em>  <strong>164</strong>  (4)   1635-1644</li>
+<li>Thierry Mee{^u}s, Laurent Lehmann, Fran{\c{c}}ois Balloux,   (2006) Molecular epidemiology of clonal diploids: a quick overview and a short DIY (do it yourself) notice.  <em>Infection, Genetics and Evolution</em>  <strong>6</strong>  (2)   163-170</li>
+<li>N. Gr{\&quot;u}nwald, S. Goodwin, M. Milgroom, W. Fry,   (2003) Analysis of genotypic diversity data for populations of microorganisms.  <em>Phytopathology</em>  <strong>93</strong>  (6)   738-746-NA</li>
+<li>Niklaus Gr{\&quot;u}nwald, Erica Goss,   (2011) Evolution and population genetics of exotic and re-emerging pathogens: Novel tools and approaches.  <em>Annual Review of Phytopathology</em>  <strong>49</strong>  249-267</li>
+<li>Fabien Halkett, Jean-Christophe Simon, Fran{\c{c}}ois Balloux,   (2005) Tackling the population genetics of clonal and partially clonal organisms.  <em>Trends in Ecology &amp; Evolution</em>  <strong>20</strong>  (4)   194-201</li>
+<li>D.L. Hartl, A.G. Clark,   (2007) Principles of Population Genetics.  <a href="http://books.google.com/books?id=SB1vQgAACAAJ">http://books.google.com/books?id=SB1vQgAACAAJ</a></li>
+<li>J. Hein, M. Schierup, C. Wiuf,   (2004) Gene Genealogies, Variation and Evolution: A primer in coalescent theory.  <a href="http://books.google.com/books?id=QBC_SFOamksC">http://books.google.com/books?id=QBC_SFOamksC</a></li>
+<li>Michael Milgroom,   (1996) Recombination and the multilocus structure of fungal populations.  <em>Annual review of phytopathology</em>  <strong>34</strong>  (1)   457-477</li>
+<li>R. Nielsen, M. Slatkin,   (2013) An Introduction to Population Genetics: Theory and Applications.  <a href="http://books.google.com/books?id=Iy08kgEACAAJ">http://books.google.com/books?id=Iy08kgEACAAJ</a></li>
+<li>A.R. Templeton,   (2006) Population Genetics and Microevolutionary Theory.  <a href="http://books.google.com/books?id=tJVreQjInt0C">http://books.google.com/books?id=tJVreQjInt0C</a></li>
+<li>J. Wakeley,   (2009) Coalescent Theory: An Introduction.  <a href="http://books.google.com/books?id=x30RAgAACAAJ">http://books.google.com/books?id=x30RAgAACAAJ</a></li>
+<li>B.S. Weir,   (1996) Genetic data analysis 2.  <a href="http://books.google.com/books?id=e9QPAQAAMAAJ">http://books.google.com/books?id=e9QPAQAAMAAJ</a></li>
+</ul>
+
+</body>
+
+</html>
+
